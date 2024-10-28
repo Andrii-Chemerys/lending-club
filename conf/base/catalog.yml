@@ -1,0 +1,8 @@
+original_lc_dataset:
+  type: pandas.CSVDataset
+  filepath: data/1_raw/lending-club-2007-2020Q3/Loan_status_2007-2020Q3-100ksample.csv
+
+lc_dataset_dictionary:
+  type: pandas.ExcelDataset
+  filepath: data/1_raw/lending-club-2007-2020Q3/LCDataDictionary.xlsx
+
