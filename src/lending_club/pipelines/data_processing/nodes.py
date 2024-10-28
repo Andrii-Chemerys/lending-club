@@ -17,3 +17,23 @@ def _parse_date(x: pd.Series) -> pd.Series:
 
 def _parse_bool(x: pd.Series) -> pd.Series:
     return x.where(x.isna(), x=="Y")
+
+# Define function that process dataset with
+def processing_lc(df: pd.DataFrame) -> pd.DataFrame:
+    # Process term values ('XX months' to XX)
+    df.term = _parse_term(df.term)
+    # Process percentage values
+    pct_list = ['int_rate', 'revol_util']
+    for x in pct_list:
+        df[x] = _parse_pct(df[x])
+    # Process date values
+    date_list = ['issue_d', 'earliest_cr_line', 'last_pymnt_d', 'next_pymnt_d', 'last_credit_pull_d',
+                'sec_app_earliest_cr_line', 'hardship_start_date', 'hardship_end_date', 'payment_plan_start_date']
+    for x in date_list:
+        df[x] = _parse_date(df[x])
+    # Process boolean values
+    bool_list = ['hardship_flag', 'debt_settlement_flag']
+    for x in bool_list:
+        df[x] = _parse_bool(df[x])
+    df.set_index('id', drop=True, inplace=True)
+    return df
