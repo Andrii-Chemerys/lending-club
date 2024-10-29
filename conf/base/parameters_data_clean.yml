@@ -1,0 +1,15 @@
+# This is a boilerplate parameters config generated for pipeline 'data_clean'
+# using Kedro 0.19.9.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
+
+# Features to be dropped 
+drop_list:
+  - 'Unnamed: 0.1'
+  - 'Unnamed: 0'
+  - url
+  - emp_title
+  - title
+  - zip_code
+

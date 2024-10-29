@@ -9,3 +9,7 @@ lc_dataset_dictionary:
 intermediate_lc_dataset:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_2007-2020Q3-100ksample.parquet
+
+primary_lc_dataset:
+  type: pandas.ParquetDataset
+  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_2007-2020Q3-100ksample.parquet
