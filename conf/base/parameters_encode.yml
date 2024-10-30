@@ -1,0 +1,23 @@
+# This is a boilerplate parameters config generated for pipeline 'encode'
+# using Kedro 0.19.9.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
+
+default_status: loan_status
+emp_len: emp_length
+category:
+  - hardship_reason
+  - home_ownership
+  - hardship_loan_status
+  - sub_grade
+  - purpose
+  - grade
+  - verification_status
+  - application_type
+  - pymnt_plan
+  - verification_status_joint
+  - hardship_status
+  - initial_list_status
+  - addr_state
+  - hardship_type

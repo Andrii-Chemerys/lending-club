@@ -26,3 +26,76 @@ none_list:
 freq_list:
   - emp_length
 
+# Columns that null values will be replaced by 0
+fill_zero:
+  - hardship_dpd
+  - hardship_length
+  - deferral_term
+  - orig_projected_additional_accrued_interest
+  - hardship_last_payment_amount
+  - hardship_payoff_balance_amount
+  - hardship_amount
+  - sec_app_open_act_il
+  - dti_joint
+  - annual_inc_joint
+  - mths_since_last_record
+  - mths_since_recent_bc_dlq
+  - mths_since_last_major_derog
+  - mths_since_recent_revol_delinq
+  - mths_since_last_delinq
+  - mths_since_rcnt_il
+
+#  Columns that null values will be replaced by median values
+fill_med:
+  - il_util
+  - all_util
+  - inq_fi
+  - open_rv_24m
+  - open_rv_12m
+  - total_bal_il
+  - open_il_24m
+  - open_il_12m
+  - total_cu_tl
+  - open_act_il
+  - open_acc_6m
+  - max_bal_bc
+  - inq_last_12m
+  - mths_since_recent_inq
+  - num_tl_120dpd_2m
+  - mo_sin_old_il_acct
+  - bc_util
+  - percent_bc_gt_75
+  - bc_open_to_buy
+  - mths_since_recent_bc
+  - pct_tl_nvr_dlq
+  - avg_cur_bal
+  - tot_coll_amt
+  - tot_cur_bal
+  - num_accts_ever_120_pd
+  - num_actv_bc_tl
+  - num_actv_rev_tl
+  - num_op_rev_tl
+  - num_il_tl
+  - mo_sin_rcnt_rev_tl_op
+  - num_rev_accts
+  - num_rev_tl_bal_gt_0
+  - num_tl_30dpd
+  - num_tl_90g_dpd_24m
+  - num_tl_op_past_12m
+  - tot_hi_cred_lim
+  - total_il_high_credit_limit
+  - mo_sin_rcnt_tl
+  - num_bc_tl
+  - mo_sin_old_rev_tl_op
+  - num_sats
+  - num_bc_sats
+  - total_bc_limit
+  - acc_open_past_24mths
+  - total_bal_ex_mort
+  - mort_acc
+  - dti
+  - revol_util
+  - pub_rec_bankruptcies
+  - chargeoff_within_12_mths
+  - collections_12_mths_ex_med
+  - tax_liens
