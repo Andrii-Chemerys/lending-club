@@ -150,5 +150,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# session db
+# Misc
+.viz/*
 session_store.db

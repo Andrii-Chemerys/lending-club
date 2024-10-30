@@ -20,4 +20,4 @@ primary_lc_dataset_encoded:
 
 features_lc_dataset:
   type: pandas.ParquetDataset
-  filepath: data/4_features/lending-club-2007-2020Q3/Loan_status_features.parquet
+  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_features.parquet
