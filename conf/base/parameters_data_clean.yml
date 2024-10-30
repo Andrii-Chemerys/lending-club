@@ -4,7 +4,8 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
 
-# Features to be dropped 
+# Columns that makes no sense or has too many or only one categorical
+# unique values and will be dropped
 drop_list:
   - 'Unnamed: 0.1'
   - 'Unnamed: 0'
@@ -12,4 +13,16 @@ drop_list:
   - emp_title
   - title
   - zip_code
+
+# Columns that missing values will be replaced by 'none'
+none_list:
+  - hardship_reason
+  - hardship_loan_status
+  - hardship_type
+  - hardship_status
+  - verification_status_joint
+
+# Columns that missing values will be replaced by most frequent value
+freq_list:
+  - emp_length
 

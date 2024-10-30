@@ -16,7 +16,7 @@ def _parse_date(x: pd.Series) -> pd.Series:
     return pd.to_datetime(x, format="%b-%Y")
 
 def _parse_bool(x: pd.Series) -> pd.Series:
-    return x.where(x.isna(), x=="Y")
+    return x=="Y"
 
 # Define function that process dataset with
 def processing_lc(df: pd.DataFrame) -> pd.DataFrame:
