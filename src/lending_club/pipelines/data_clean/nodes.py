@@ -11,12 +11,12 @@ def _drop_features(df: pd.DataFrame, params: dict) -> pd.DataFrame:
 def _fill_data(df: pd.DataFrame, params: dict) -> pd.DataFrame:
 
     # Fill missing values by 'None'
-    imp_none = SimpleImputer(strategy='constant', fill_value='None', copy=False)
-    imp_none.fit_transform(df[params['none_list']])
+    imp_none = SimpleImputer(missing_values=None, strategy='constant', fill_value='none')
+    df[params['none_list']] = imp_none.fit_transform(df[params['none_list']])
     print(params['none_list'])
     # Fill missing values by most frequent ones
-    imp_mf = SimpleImputer(strategy='most_frequent', copy=False)
-    imp_mf.fit_transform(df[params['freq_list']])
+    imp_mf = SimpleImputer(missing_values=None, strategy='most_frequent')
+    df[params['freq_list']] = imp_mf.fit_transform(df[params['freq_list']])
     return df
 
 def clean_dataset(df: pd.DataFrame, params: dict) -> pd.DataFrame:
