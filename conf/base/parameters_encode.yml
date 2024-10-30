@@ -4,7 +4,7 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
 
-default_status: loan_status
+default: loan_status
 emp_len: emp_length
 category:
   - hardship_reason
