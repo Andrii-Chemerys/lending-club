@@ -10,7 +10,9 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=encode_dataset,
-            inputs=['primary_lc_dataset', 'parameters'],
-            outputs='primary_lc_dataset_encoded',
+            inputs=['intermediate_lc_clean', 'parameters'],
+            outputs='intermediate_encoded',
+            name='encode_dataset_node',
+            tags='Intermediate'
         )
-    ])
+    ]) # type: ignore

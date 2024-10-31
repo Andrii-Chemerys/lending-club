@@ -16,5 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=processing_lc,
             inputs='original_lc_dataset',
             outputs='intermediate_lc_dataset',
+            name='processing_lc_node',
+            tags="Raw"
         )
-    ])
+    ]) # type: ignore
