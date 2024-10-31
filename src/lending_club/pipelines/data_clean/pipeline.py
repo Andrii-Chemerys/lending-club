@@ -11,6 +11,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=clean_dataset,
             inputs=['intermediate_lc_dataset','parameters'],
-            outputs="primary_lc_dataset",
+            outputs="intermediate_lc_clean",
+            name='clean_dataset_node',
+            tags='Intermediate'
         )
-    ])
+    ]) # type: ignore

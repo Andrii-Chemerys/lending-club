@@ -33,4 +33,5 @@ def _fill_data(df: pd.DataFrame, params: dict) -> pd.DataFrame:
 def clean_dataset(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     df = _drop_features(df, params)
     df = _fill_data(df, params)
+    df = df.drop_duplicates()
     return df

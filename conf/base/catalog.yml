@@ -8,16 +8,21 @@ lc_dataset_dictionary:
 
 intermediate_lc_dataset:
   type: pandas.ParquetDataset
-  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_2007-2020Q3-100ksample.parquet
+  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_typed.parquet
 
-primary_lc_dataset:
+intermediate_lc_clean:
   type: pandas.ParquetDataset
-  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_cleaned.parquet
+  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_cleaned.parquet
 
-primary_lc_dataset_encoded:
+intermediate_outl_log:
+  type: pandas.ParquetDataset
+  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_outl_log.parquet
+
+intermediate_encoded:
   type: pandas.ParquetDataset
   filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_encoded.parquet
 
 features_lc_dataset:
   type: pandas.ParquetDataset
   filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_features.parquet
+

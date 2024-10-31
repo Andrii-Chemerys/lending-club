@@ -12,5 +12,5 @@ def outliers_handler(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     gt_thresh = z_scores > params['threshold']
     outlier_volume = pd.DataFrame(gt_thresh.sum(), columns=['num_outliers'])
     fields_to_treat = outlier_volume[outlier_volume['num_outliers'] > 0].index.to_list()
-    df[fields_to_treat] = np.log1p(df[fields_to_treat].astype(float))
-    return df
+    df[f"{fields_to_treat}_log"] = np.log1p(df[fields_to_treat].astype(float))
+    return df[[f"{fields_to_treat}_log"]]
