@@ -10,7 +10,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=encode_dataset,
-            inputs=['primary_lc_dataset', 'parameters'],
+            inputs=['primary_lc_dataset_outl_log', 'parameters'],
             outputs='primary_lc_dataset_encoded',
         )
     ])
