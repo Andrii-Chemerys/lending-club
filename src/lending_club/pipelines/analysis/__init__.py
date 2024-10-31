@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'outliers'
+This is a boilerplate pipeline 'analysis'
 generated using Kedro 0.19.9
 """
 

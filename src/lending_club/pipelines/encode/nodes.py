@@ -8,14 +8,14 @@ from sklearn.preprocessing import OrdinalEncoder
 
 # Function to encode emp_length to number
 def _parse_emp_len(df: pd.DataFrame, params: dict) -> pd.DataFrame:
-    df[f"{params['emp_len']}_enc"] = df[params['emp_len']].str.split(" ").str[0].str.replace("+", "").str.replace("<", "0").astype(int)
-    return df[[f"{params['emp_len']}_enc"]]
+    df[params['emp_len']] = df[params['emp_len']].str.split(" ").str[0].str.replace("+", "").str.replace("<", "0").astype(int)
+    return df[params['emp_len']]
 
 # Function encodes object values to numbers
 def _encode(df: pd.DataFrame, params: dict) -> pd.DataFrame:
     encoder = OrdinalEncoder()
-    df[f"{params['category']}_enc"] = encoder.fit_transform(df[params['category']])
-    return df[[f"{params['category']}_enc"]]
+    df[params['category']] = encoder.fit_transform(df[params['category']])
+    return df[params['category']]
 
 # Function to encode default_status from loan_status, i.e. our target
 def _default_status(df: pd.DataFrame, params: dict) -> pd.DataFrame:
@@ -28,7 +28,7 @@ def _default_status(df: pd.DataFrame, params: dict) -> pd.DataFrame:
 
 
 def encode_dataset(df: pd.DataFrame, params: dict) -> pd.DataFrame:
-    return pd.concat([_parse_emp_len(df, params), 
+    return pd.concat([_parse_emp_len(df, params),
                       _encode(df, params),
                       _default_status(df, params)],
                      axis=1)

@@ -14,13 +14,13 @@ intermediate_lc_clean:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_cleaned.parquet
 
-intermediate_outl_log:
-  type: pandas.ParquetDataset
-  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_outl_log.parquet
-
 intermediate_encoded:
   type: pandas.ParquetDataset
-  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_encoded.parquet
+  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_encoded.parquet
+
+primary_analysis:
+  type: pandas.ParquetDataset
+  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_analysis.parquet
 
 features_lc_dataset:
   type: pandas.ParquetDataset
