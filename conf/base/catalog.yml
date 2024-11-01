@@ -26,26 +26,12 @@ features_dataset:
   type: pandas.ParquetDataset
   filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_features.parquet
 
-features_X:
-  type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_X.parquet
+regressor:
+  type: pickle.PickleDataset
+  filepath: data/6_models/lending-club-2007-2020Q3/Loan_status.pkl
+  versioned: true
 
-features_y:
+metrics:
   type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_y.parquet
-
-features_X_train:
-  type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_X_train.parquet
-
-features_y_train:
-  type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_y_train.parquet
-
-features_X_test:
-  type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_X_test.parquet
-
-features_y_test:
-  type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_y_test.parquet
+  filepath: data/7_models_output/lending-club-2007-2020Q3/Loan_status.parquet
+  versioned: true  

@@ -50,3 +50,11 @@ def features_eng(df_1: pd.DataFrame, df: pd.DataFrame, params: dict) -> pd.DataF
     df = _dates_fe(df_1, params)
     df = _adjusted_feat(df)
     return df
+
+def selected_features(df_prim: pd.DataFrame, 
+                      df_fe: pd.DataFrame, 
+                      params: dict) -> pd.DataFrame:
+    df = df_prim[params['features']]
+    return pd.concat([df, 
+                      df_fe if params['ignore_new_features'] else None], 
+                      axis=1)

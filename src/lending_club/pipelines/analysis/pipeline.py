@@ -15,4 +15,4 @@ def create_pipeline(**kwargs) -> Pipeline:
             name='eda_df_node',
             tags='Primary'
         )
-    ])
+    ]) # type: ignore

@@ -1,0 +1,27 @@
+# This is a boilerplate parameters config generated for pipeline 'feature_eng'
+# using Kedro 0.19.9.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
+
+cur_date: '2020-10-01'
+
+ignore_new_features: False
+
+# important features for baseline model
+features:
+  - default_status              # Target feature
+  - total_bc_limit
+  - mo_sin_rcnt_rev_tl_op
+  - max_bal_bc
+  - mths_since_recent_inq
+  - inq_last_6mths
+  - fico_range_high
+  - term
+  - home_ownership
+  - verification_status
+  - acc_open_past_24mths
+  - mths_since_rcnt_il
+  - open_rv_24m
+  - open_acc_6m
+  - bc_util
