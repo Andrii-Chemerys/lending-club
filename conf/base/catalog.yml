@@ -1,37 +1,71 @@
 original_lc_dataset:
   type: pandas.CSVDataset
   filepath: data/1_raw/lending-club-2007-2020Q3/Loan_status_2007-2020Q3-100ksample.csv
+  metadata:
+    kedro-viz:
+      layer: raw
 
 lc_dataset_dictionary:
   type: pandas.ExcelDataset
   filepath: data/1_raw/lending-club-2007-2020Q3/LCDataDictionary.xlsx
+  metadata:
+    kedro-viz:
+      layer: raw
 
 intermediate_lc_dataset:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_typed.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
 
 intermediate_lc_clean:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_cleaned.parquet
-
+  metadata:
+    kedro-viz:
+      layer: intermediate
+      
 intermediate_encoded:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_encoded.parquet
-
+  metadata:
+    kedro-viz:
+      layer: intermediate
+      
 primary_analysis:
   type: pandas.ParquetDataset
   filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_analysis.parquet
+  metadata:
+    kedro-viz:
+      layer: primary
 
 features_dataset:
   type: pandas.ParquetDataset
   filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_features.parquet
+  metadata:
+    kedro-viz:
+      layer: feature
+
+"{model_inputs}#mi":
+  type: pandas.ParquetDataset
+  filepath: data/5_model_input/lending-club-2007-2020Q3/{model_inputs}.parquet
+  metadata:
+    kedro-viz:
+      layer: inputs
 
 regressor:
   type: pickle.PickleDataset
   filepath: data/6_models/lending-club-2007-2020Q3/Loan_status.pkl
   versioned: true
+  metadata:
+    kedro-viz:
+      layer: models
 
 metrics:
-  type: pandas.ParquetDataset
-  filepath: data/7_models_output/lending-club-2007-2020Q3/Loan_status.parquet
-  versioned: true  
+  type: pandas.CSVDataset
+  filepath: data/7_model_output/lending-club-2007-2020Q3/Scores.csv
+  versioned: true
+  metadata:
+    kedro-viz:
+      layer: outputs
