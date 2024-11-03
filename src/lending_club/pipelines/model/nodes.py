@@ -2,6 +2,9 @@
 This is a boilerplate pipeline 'split_dataset'
 generated using Kedro 0.19.9
 """
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
@@ -12,8 +15,24 @@ from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 import pandas as pd
 import logging
+from ..analysis.nodes import features_eng
+from ..encode.nodes import _default_status
 
 logger = logging.getLogger(__name__)
+
+def split_n_balance(df: pd.DataFrame, params: dict):
+    y = _default_status(df, params)
+    X = df.drop('default_status', axis=1)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=params['test_size'],
+        random_state=params['random_state']
+    )
+    logger.info("Train imbalanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
+    smote = SMOTE()
+    X_train, y_train = smote.fit_resample(X_train, y_train) # type: ignore
+    logger.info("Train balanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
+    return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train, cb: CatBoostClassifier):
@@ -36,7 +55,7 @@ def evaluate_metrics(model: object, name: str, X_true: object, y_true: object) -
     metrics['roc_auc']   = {name: roc_auc_score(y_true, y_pred)}
     metrics['conf_mtx']  = {name: confusion_matrix(y_true, y_pred)}
     print("Model's scores:\n", metrics)
-    
+
 
 
 '''
@@ -72,14 +91,21 @@ def model_pipeline(params: dict):
     encode = make_column_transformer(
         (OrdinalEncoder(), params['category']),
         (FunctionTransformer(_parse_emp_len), params['emp_len']),
-        # TODO: Must be done before splitting
-        # (FunctionTransformer(_default_status), params['default']), 
         remainder='passthrough'
     )
+    # feature engineering node replacement
+    new_features = make_column_transformer(
+        (FunctionTransformer(features_eng), []),
+        remainder='passthrough'
+    )
+    normalizer = make_column_transformer(
+        (StandardScaler(), params['features'])
+    )#TODO: Think the way to select features after 'new_features'
     pipeline = make_pipeline([
         drop_trash,
         data_clean,
         encode,
+        new_features,
         StandardScaler(),
         CatBoostClassifier(
             iterations=params['iterations'],						# Maximum number of boosting iterations
@@ -91,6 +117,6 @@ def model_pipeline(params: dict):
             random_seed=params['random_seed'],
             verbose=params['verbose'],						        # Print log every X iterations
             eval_fraction=params['eval_fraction']                   # Fraction of training dataset for validation
-        )   
+        )
     ])
     return pipeline

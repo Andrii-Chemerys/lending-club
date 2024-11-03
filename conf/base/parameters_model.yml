@@ -4,7 +4,8 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
 
-
+test_size: 0.2
+random_state: 42
 model_name: catboost
 model_options:
   iterations: 500               # Maximum number of boosting iterations
@@ -12,7 +13,7 @@ model_options:
   eval_metric: AUC              # Metric to monitor
   custom_loss :                 # Additional metrics to plot
     - Accuracy
-    - Recall                    
+    - Recall
   early_stopping_rounds: 20     # Stop if no improvement after X iterations
   od_type: Iter                 # Overfitting detection type (detect after fixed number of non-improving iterations)
   random_seed: 42

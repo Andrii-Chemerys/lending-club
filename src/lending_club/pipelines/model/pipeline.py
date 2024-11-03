@@ -4,11 +4,17 @@ generated using Kedro 0.19.9
 """
 
 from kedro.pipeline import Pipeline, pipeline, node
-from .nodes import model_pipeline, train_model, evaluate_metrics
+from .nodes import split_n_balance, model_pipeline, train_model, evaluate_metrics
 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
+        node(
+            func=split_n_balance,
+            inputs= ['intermediate_lc_dataset', 'parameters'],
+            outputs=['X_train#mi', 'X_test#mi', 'y_train#mi', 'y_test#mi'],
+            name='split_features_node',
+        ),
         node(
             func=model_pipeline,
             inputs='parameters',
@@ -26,6 +32,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs=['regressor', 'params:model_name', 'X_test', 'y_test'],
             outputs=None,
             name='evaluate_metrics_node'
-        ),        
-    ], 
+        ),
+    ],
     tags='Model') # type: ignore

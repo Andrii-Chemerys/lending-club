@@ -16,7 +16,7 @@ def _dates_fe(df: pd.DataFrame, params: dict) -> pd.DataFrame:
         (pd.Timestamp(params['cur_date']) - df.earliest_cr_line) / pd.Timedelta(30, 'D')
     ).astype(int)
     df['issue_y'] = df.issue_d.dt.year
-    return df[['issue_y']]
+    return df[['issue_y', 'mo_since_earliest_cr_line']]
 
 # Considering joint applications let's use new 'adjusted' features for annual income, dti and revol_bal
 # that takes joint features where it is the case or individual features otherwise
