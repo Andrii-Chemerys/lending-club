@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "kedro",
             "console": "integratedTerminal",
-            "args": ["run", "-p", "split_dataset"]
+            "args": ["run", "-p", "analysis"]
         }
     ]
 }
