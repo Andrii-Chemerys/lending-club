@@ -25,28 +25,18 @@ clean :
   - term
   - int_rate
   - installment
-  - annual_inc
-  - dti
   - delinq_2yrs
   - fico_range_low
-  - fico_range_high
-  - inq_last_6mths
   - mths_since_last_delinq
   - mths_since_last_record
-  - open_acc
   - pub_rec
-  - revol_bal
-  - revol_util
   - total_acc
   - collections_12_mths_ex_med
   - mths_since_last_major_derog
-  - annual_inc_joint
-  - dti_joint
   - acc_now_delinq
   - tot_coll_amt
   - tot_cur_bal
   - open_acc_6m
-  - open_act_il
   - open_il_12m
   - open_il_24m
   - mths_since_rcnt_il
@@ -64,13 +54,11 @@ clean :
   - avg_cur_bal
   - bc_open_to_buy
   - bc_util
-  - chargeoff_within_12_mths
   - delinq_amnt
   - mo_sin_old_il_acct
   - mo_sin_old_rev_tl_op
   - mo_sin_rcnt_rev_tl_op
   - mo_sin_rcnt_tl
-  - mort_acc
   - mths_since_recent_bc
   - mths_since_recent_bc_dlq
   - mths_since_recent_inq
@@ -82,7 +70,6 @@ clean :
   - num_bc_tl
   - num_il_tl
   - num_op_rev_tl
-  - num_rev_accts
   - num_rev_tl_bal_gt_0
   - num_sats
   - num_tl_120dpd_2m
@@ -97,15 +84,18 @@ clean :
   - total_bal_ex_mort
   - total_bc_limit
   - total_il_high_credit_limit
-  - revol_bal_joint
-  - sec_app_fico_range_low
-  - sec_app_fico_range_high
-  - sec_app_inq_last_6mths
-  - sec_app_mort_acc
-  - sec_app_open_acc
-  - sec_app_revol_util
-  - sec_app_open_act_il
-  - sec_app_num_rev_accts
-  - sec_app_chargeoff_within_12_mths
-  - sec_app_collections_12_mths_ex_med
+
+# Features for extraction from new features dataset
+new_feat :
+  - annual_inc_adj
+  - dti_adj
+  - fico_range_high_adj
+  - inq_last_6mths_adj
+  - open_acc_adj
+  - revol_bal_adj
+  - revol_util_adj
+  - open_act_il_adj
+  - chargeoff_within_12_mths_adj
+  - mort_acc_adj
+  - num_rev_accts_adj
 

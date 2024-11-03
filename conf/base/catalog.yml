@@ -14,49 +14,49 @@ lc_dataset_dictionary:
 
 intermediate_lc_dataset:
   type: pandas.ParquetDataset
-  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_typed.parquet
+  filepath: data/2_intermediate/lending-club/Loan_status_typed.pq
   metadata:
     kedro-viz:
       layer: intermediate
 
 intermediate_lc_clean:
   type: pandas.ParquetDataset
-  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_cleaned.parquet
+  filepath: data/2_intermediate/lending-club/Loan_status_cleaned.parquet
   metadata:
     kedro-viz:
       layer: intermediate
       
 intermediate_encoded:
   type: pandas.ParquetDataset
-  filepath: data/2_intermediate/lending-club-2007-2020Q3/Loan_status_encoded.parquet
+  filepath: data/2_intermediate/lending-club/Loan_status_encoded.parquet
   metadata:
     kedro-viz:
       layer: intermediate
       
 primary_analysis:
   type: pandas.ParquetDataset
-  filepath: data/3_primary/lending-club-2007-2020Q3/Loan_status_analysis.parquet
+  filepath: data/3_primary/lending-club/Loan_status_analysis.parquet
   metadata:
     kedro-viz:
       layer: primary
 
-features_dataset:
+features_{name}:
   type: pandas.ParquetDataset
-  filepath: data/4_feature/lending-club-2007-2020Q3/Loan_status_features.parquet
+  filepath: data/4_feature/lending-club/Loan_status_features_{name}.parquet
   metadata:
     kedro-viz:
       layer: feature
 
 "{model_inputs}#mi":
   type: pandas.ParquetDataset
-  filepath: data/5_model_input/lending-club-2007-2020Q3/{model_inputs}.parquet
+  filepath: data/5_model_input/lending-club/{model_inputs}.parquet
   metadata:
     kedro-viz:
       layer: inputs
 
 regressor:
   type: pickle.PickleDataset
-  filepath: data/6_models/lending-club-2007-2020Q3/Loan_status.pkl
+  filepath: data/6_models/lending-club/Loan_status.pkl
   versioned: true
   metadata:
     kedro-viz:
@@ -64,7 +64,7 @@ regressor:
 
 metrics:
   type: pandas.CSVDataset
-  filepath: data/7_model_output/lending-club-2007-2020Q3/Scores.csv
+  filepath: data/7_model_output/lending-club/Scores.csv
   versioned: true
   metadata:
     kedro-viz:

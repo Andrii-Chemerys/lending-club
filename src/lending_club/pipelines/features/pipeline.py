@@ -10,7 +10,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=selected_features,
-            inputs=['primary_analysis', 'features_new', 'parameters'],
+            inputs=['primary_analysis', 'parameters'],
             outputs='features_dataset',
             name='selected_features_node',
             tags='Features'

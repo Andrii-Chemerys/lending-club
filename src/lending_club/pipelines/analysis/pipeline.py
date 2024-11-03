@@ -10,10 +10,10 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=features_eng,
-            inputs=['intermediate_lc_clean', 'primary_analysis', 'parameters'],
+            inputs=['intermediate_lc_clean','parameters'],
             outputs='features_new',
             name='features_eng_node',
-            tags='Primary'
+            tags='Features'
         ),
         node(
             func=eda_df,

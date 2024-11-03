@@ -5,9 +5,9 @@ generated using Kedro 0.19.9
 import pandas as pd
 
 # Function for merging features for analisys from clean and encoded datasets
-def eda_df (df_clean: pd.DataFrame, df_encode: pd.DataFrame, df_fe: pd.DataFrame, params: dict) -> pd.DataFrame:
-    return pd.concat([df_clean[params['clean']], df_encode[params['encoded']], df_fe], 
-        axis=1)
+def eda_df (df_clean: pd.DataFrame, df_encode: pd.DataFrame, df_nf: pd.DataFrame, params: dict) -> pd.DataFrame:
+    return pd.concat([df_clean[params['clean']], df_encode[params['encoded']], df_nf[params['new_feat']]], axis=1)
+
 
 # Define dates feature engineering function
 def _dates_fe(df: pd.DataFrame, params: dict) -> pd.DataFrame:
@@ -16,7 +16,7 @@ def _dates_fe(df: pd.DataFrame, params: dict) -> pd.DataFrame:
         (pd.Timestamp(params['cur_date']) - df.earliest_cr_line) / pd.Timedelta(30, 'D')
     ).astype(int)
     df['issue_y'] = df.issue_d.dt.year
-    return df
+    return df[['issue_y']]
 
 # Considering joint applications let's use new 'adjusted' features for annual income, dti and revol_bal
 # that takes joint features where it is the case or individual features otherwise
@@ -48,10 +48,7 @@ def _adjusted_feat(df: pd.DataFrame) -> pd.DataFrame:
             df[feat_adj] = df[[feat, sec_feat]].sum(axis=1)
         elif func == 'avg':
             df[feat_adj] = df[[feat, sec_feat]].mean(axis=1)
-    return df
+    return df.filter(like='_adj')
 
-def features_eng(df_1: pd.DataFrame, df: pd.DataFrame, params: dict) -> pd.DataFrame:
-    # Feature engineering dataset will be new dataframe
-    df = _dates_fe(df_1, params)
-    df = _adjusted_feat(df)
-    return df
+def features_eng(df: pd.DataFrame, params: dict) -> pd.DataFrame:
+    return pd.concat([_dates_fe(df, params), _adjusted_feat(df)], axis=1)

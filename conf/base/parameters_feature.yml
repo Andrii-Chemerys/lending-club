@@ -6,22 +6,25 @@
 
 cur_date: '2020-10-01'
 
-ignore_new_features: False
+target: default_status              
 
 # important features for baseline model
 features:
-  - default_status              # Target feature
-  - total_bc_limit
-  - mo_sin_rcnt_rev_tl_op
-  - max_bal_bc
-  - mths_since_recent_inq
-  - inq_last_6mths
-  - fico_range_high
-  - term
-  - home_ownership
-  - verification_status
-  - acc_open_past_24mths
-  - mths_since_rcnt_il
-  - open_rv_24m
-  - open_acc_6m
-  - bc_util
+  -  dti_adj
+  -  max_bal_bc
+  -  mths_since_rcnt_il
+  -  bc_open_to_buy
+  -  mths_since_recent_inq
+  -  verification_status
+  -  fico_range_low
+  -  acc_open_past_24mths
+  -  term
+  -  mo_sin_rcnt_rev_tl_op
+  -  open_rv_24m
+  -  sub_grade
+  -  open_acc_6m
+  -  percent_bc_gt_75
+  -  tot_cur_bal
+  -  home_ownership
+  -  inq_last_6mths_adj
+  -  mort_acc_adj

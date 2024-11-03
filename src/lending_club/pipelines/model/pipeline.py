@@ -4,14 +4,20 @@ generated using Kedro 0.19.9
 """
 
 from kedro.pipeline import Pipeline, pipeline, node
-from .nodes import standartizer, train_model, evaluate_metrics
+from .nodes import model_pipeline, train_model, evaluate_metrics
 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
+            func=model_pipeline,
+            inputs='parameters',
+            outputs='model_pipe',
+            name='model_pipeline_node'
+        ),
+        node(
             func=train_model,
-            inputs=['X_train', 'y_train', 'params:model_options'],
+            inputs=['X_train', 'y_train', 'model_pipe'],
             outputs='regressor',
             name='train_model_node'
         ),
