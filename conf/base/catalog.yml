@@ -40,9 +40,16 @@ primary_analysis:
     kedro-viz:
       layer: primary
 
-features_{name}:
+"features_{name}":
   type: pandas.ParquetDataset
   filepath: data/4_feature/lending-club/Loan_status_features_{name}.parquet
+  metadata:
+    kedro-viz:
+      layer: feature
+
+"{name}#yml":
+  type: yaml.YAMLDataset
+  filepath: conf/local/parameters_{name}.yml
   metadata:
     kedro-viz:
       layer: feature

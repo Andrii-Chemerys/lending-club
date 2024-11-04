@@ -23,13 +23,13 @@ def create_pipeline(**kwargs) -> Pipeline:
         ),
         node(
             func=train_model,
-            inputs=['X_train', 'y_train', 'model_pipe'],
+            inputs=['X_train#mi', 'y_train#mi', 'model_pipe', 'params:model_options'],
             outputs='regressor',
             name='train_model_node'
         ),
         node(
             func=evaluate_metrics,
-            inputs=['regressor', 'params:model_name', 'X_test', 'y_test'],
+            inputs=['regressor', 'params:model_options', 'X_test#mi', 'y_test#mi'],
             outputs=None,
             name='evaluate_metrics_node'
         ),

@@ -6,25 +6,5 @@
 
 cur_date: '2020-10-01'
 
-target: default_status              
-
-# important features for baseline model
-features:
-  -  dti_adj
-  -  max_bal_bc
-  -  mths_since_rcnt_il
-  -  bc_open_to_buy
-  -  mths_since_recent_inq
-  -  verification_status
-  -  fico_range_low
-  -  acc_open_past_24mths
-  -  term
-  -  mo_sin_rcnt_rev_tl_op
-  -  open_rv_24m
-  -  sub_grade
-  -  open_acc_6m
-  -  percent_bc_gt_75
-  -  tot_cur_bal
-  -  home_ownership
-  -  inq_last_6mths_adj
-  -  mort_acc_adj
+corr_treshold: 0.05
+intercorr_treshold: 0.75

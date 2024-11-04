@@ -11,7 +11,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=selected_features,
             inputs=['primary_analysis', 'parameters'],
-            outputs='features_dataset',
+            outputs='model_features#yml',
             name='selected_features_node',
             tags='Features'
         )

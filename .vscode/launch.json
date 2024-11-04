@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "kedro",
             "console": "integratedTerminal",
-            "args": ["run", "-p", "analysis"]
+            "args": ["run", "-p", "model"]
         }
     ]
 }
