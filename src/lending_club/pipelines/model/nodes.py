@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import FunctionTransformer
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.impute import SimpleImputer
@@ -16,28 +15,32 @@ from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 import pandas as pd
 import logging
-from ..analysis.nodes import features_eng
 from ..encode.nodes import _default_status
 
 logger = logging.getLogger(__name__)
 
-def split_dataset(df: pd.DataFrame, params: dict):
+def split_n_balance(df: pd.DataFrame, df_fe: pd.DataFrame, params: dict):
     y = _default_status(df, params)
-    X = df #TODO Remove .drop('default_status', axis=1)
+    X = pd.concat([df, df_fe], axis=1)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
         test_size=params['test_size'],
         random_state=params['random_state']
     )
+    logger.info("Train imbalanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
+    smote = SMOTE()
+    X_train, y_train = smote.fit_resample(X_train, y_train) # type: ignore
+    logger.info("Train balanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
     return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train, regressor, params: dict):
     try:
-        regressor.set_params(**params['fit_options']).fit(X_train, y_train) 
+        regressor.set_params(**params['fit_options']).fit(X_train, y_train)
     except:
         regressor.fit(X_train, y_train)
     return regressor
+
 
 def evaluate_metrics(model: object, params: dict, X_true: object, y_true: object) -> pd.DataFrame:
     y_pred = model.predict(X_true)
@@ -55,60 +58,39 @@ def evaluate_metrics(model: object, params: dict, X_true: object, y_true: object
     print("Model's scores:\n", metrics)
 
 
-
-'''
-Merging in one pipeline functions from:
-    - data_process pipeline
-    - data_clean pipeline
-    - encode pipeline
-'''
-
 def _drop_duplicates(df: pd.DataFrame):
     return df.drop_duplicates()
 
-# Function to encode emp_length to number
-def _parse_emp_len(df: pd.DataFrame, emp_len: str) -> pd.DataFrame:
-    df[emp_len] = df[emp_len].str.split(" ").str[0].str.replace("+", "").str.replace("<", "0").astype(int)
-    return df[[emp_len]]
 
 def model_pipeline(params: dict):
-    # Drop duplicates and selected features
-    drop_trash = make_column_transformer(
-        ('drop', params["drop_list"]),
-        remainder=FunctionTransformer(_drop_duplicates)
+
+    # split important features to assign preprocessing steps
+    category_feat = [f for f in (params['category'] + params['emp_len']) if f in params['model_features']]
+    numeric_feat_zero = [f for f in params['fill_zero'] if f in params['model_features']]
+    numeric_feat_med = [f for f in params['fill_med'] if f in params['model_features']]
+
+    # transformer to replace missing numeric values by 0
+    numeric_feat_zero_transformer = make_pipeline(
+        SimpleImputer(strategy='constant', fill_value=0),
+        StandardScaler()
     )
-    # pipelines/data_clean replacement
-    data_clean = make_column_transformer(
-        (SimpleImputer(missing_values=None, strategy='constant', fill_value='none'), params['none_list']),
-        (SimpleImputer(missing_values=None, strategy='most_frequent'), params['freq_list']),
-        (SimpleImputer(strategy='constant', fill_value=0), params['fill_zero']),
-        (SimpleImputer(strategy='median'), params['fill_med']),
-        remainder='passthrough'
+    # transformer to replace missing numeric values by median
+    numeric_feat_med_transformer = make_pipeline(
+        SimpleImputer(strategy='median'),
+        StandardScaler()
     )
-    # pipelines/encode replacement
-    encode = make_column_transformer(
-        (OrdinalEncoder(), params['category']),
-        (FunctionTransformer(_parse_emp_len), params['emp_len']),
-        remainder='passthrough'
+    # assemble transformers to preprocessing pipe
+    preprocessing = make_column_transformer(
+        (OrdinalEncoder(), category_feat),
+        (numeric_feat_zero_transformer, numeric_feat_zero),
+        (numeric_feat_med_transformer, numeric_feat_med)
     )
-    # feature engineering node replacement
-    new_features = make_column_transformer(
-        (FunctionTransformer(features_eng), []),
-        remainder='passthrough'
-    )
-    # scale features selected for model and drop the rest
-    normalizer = make_column_transformer(
-        (StandardScaler(), params['model_features']),
-        remainder='drop'
-    )
+
     regressor_params = params['model_options']['regressor_options']
+
     pipeline = make_pipeline(
-        drop_trash,
-        data_clean,
-        encode,
-        new_features,
-        normalizer,
-        SMOTE(random_state=params['random_state']),
+        preprocessing,
+        # SMOTE(random_state=params['random_state']),
         # CatBoostClassifier(
         #     iterations=regressor_params['iterations'],						# Maximum number of boosting iterations
         #     learning_rate=regressor_params['learning_rate'],					# Learning rate

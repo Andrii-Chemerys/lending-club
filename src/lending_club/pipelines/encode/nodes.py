@@ -24,7 +24,7 @@ def _default_status(df: pd.DataFrame, params: dict) -> pd.DataFrame:
             (df[params['default']] == 'Does not meet the credit policy. Status:Charged Off') |
             (df[params['default']] == 'Default')
     )
-    return df[['default_status']]
+    return df['default_status']
 
 
 def encode_dataset(df: pd.DataFrame, params: dict) -> pd.DataFrame:

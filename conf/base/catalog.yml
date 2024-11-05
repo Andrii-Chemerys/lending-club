@@ -14,7 +14,7 @@ lc_dataset_dictionary:
 
 intermediate_lc_dataset:
   type: pandas.ParquetDataset
-  filepath: data/2_intermediate/lending-club/Loan_status_typed.pq
+  filepath: data/2_intermediate/lending-club/Loan_status_typed.parquet
   metadata:
     kedro-viz:
       layer: intermediate
@@ -25,14 +25,14 @@ intermediate_lc_clean:
   metadata:
     kedro-viz:
       layer: intermediate
-      
+
 intermediate_encoded:
   type: pandas.ParquetDataset
   filepath: data/2_intermediate/lending-club/Loan_status_encoded.parquet
   metadata:
     kedro-viz:
       layer: intermediate
-      
+
 primary_analysis:
   type: pandas.ParquetDataset
   filepath: data/3_primary/lending-club/Loan_status_analysis.parquet
@@ -49,17 +49,10 @@ primary_analysis:
 
 "{name}#yml":
   type: yaml.YAMLDataset
-  filepath: conf/local/parameters_{name}.yml
+  filepath: conf/base/parameters_{name}.yml
   metadata:
     kedro-viz:
       layer: feature
-
-"{model_inputs}#mi":
-  type: pandas.ParquetDataset
-  filepath: data/5_model_input/lending-club/{model_inputs}.parquet
-  metadata:
-    kedro-viz:
-      layer: inputs
 
 regressor:
   type: pickle.PickleDataset

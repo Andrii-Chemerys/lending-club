@@ -26,4 +26,5 @@ model_options:
   name: randomforestclassifier
   regressor_options:
     n_estimators: 100
-    random_state: 42  
+    random_state: 42
+    criterion: entropy
