@@ -7,20 +7,23 @@
 test_size: 0.2
 random_state: 42
 model_options:
-  name: catboost
+  # name: catboost
+  # regressor_options:
+  #   iterations: 500               # Maximum number of boosting iterations
+  #   learning_rate: 0.05           # Learning rate
+  #   eval_metric: Precision        # Metric to monitor
+  #   custom_loss :                 # Additional metrics to plot
+  #     - AUC
+  #     - Accuracy
+  #     - Recall
+  #   early_stopping_rounds: 20     # Stop if no improvement after X iterations
+  #   od_type: Iter                 # Overfitting detection type (detect after fixed number of non-improving iterations)
+  #   random_seed: 42
+  #   verbose: 100                  # Print log every X iterations
+  #   eval_fraction: 0.2
+  #   use_best_model: True
+  # fit_options:
+  name: randomforestclassifier
   regressor_options:
-    iterations: 500               # Maximum number of boosting iterations
-    learning_rate: 0.05           # Learning rate
-    eval_metric: Precision        # Metric to monitor
-    custom_loss :                 # Additional metrics to plot
-      - AUC
-      - Accuracy
-      - Recall
-    early_stopping_rounds: 20     # Stop if no improvement after X iterations
-    od_type: Iter                 # Overfitting detection type (detect after fixed number of non-improving iterations)
-    random_seed: 42
-    verbose: 100                  # Print log every X iterations
-    eval_fraction: 0.2
-  fit_options:
-    catboostclassifier__use_best_model: True
-    catboostclassifier__plot: False
+    n_estimators: 100
+    random_state: 42  

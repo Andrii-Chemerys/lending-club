@@ -1,0 +1,20 @@
+model_features:
+- fico_range_low
+- acc_open_past_24mths
+- mths_since_rcnt_il
+- percent_bc_gt_75
+- home_ownership
+- max_bal_bc
+- mths_since_recent_inq
+- open_rv_24m
+- verification_status
+- open_acc_6m
+- sub_grade
+- bc_open_to_buy
+- mo_sin_rcnt_rev_tl_op
+- inq_last_6mths_adj
+- tot_cur_bal
+- mort_acc_adj
+- term
+- dti_adj
+target: default_status

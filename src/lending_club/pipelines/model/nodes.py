@@ -11,6 +11,7 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.impute import SimpleImputer
+from sklearn.ensemble import RandomForestClassifier
 from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 import pandas as pd
@@ -20,9 +21,9 @@ from ..encode.nodes import _default_status
 
 logger = logging.getLogger(__name__)
 
-def split_n_balance(df: pd.DataFrame, params: dict):
+def split_dataset(df: pd.DataFrame, params: dict):
     y = _default_status(df, params)
-    X = df.drop('default_status', axis=1)
+    X = df #TODO Remove .drop('default_status', axis=1)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
         test_size=params['test_size'],
@@ -32,7 +33,10 @@ def split_n_balance(df: pd.DataFrame, params: dict):
 
 
 def train_model(X_train, y_train, regressor, params: dict):
-    regressor.set_params(**params['fit_options']).fit(X_train, y_train)
+    try:
+        regressor.set_params(**params['fit_options']).fit(X_train, y_train) 
+    except:
+        regressor.fit(X_train, y_train)
     return regressor
 
 def evaluate_metrics(model: object, params: dict, X_true: object, y_true: object) -> pd.DataFrame:
@@ -98,23 +102,24 @@ def model_pipeline(params: dict):
         remainder='drop'
     )
     regressor_params = params['model_options']['regressor_options']
-    pipeline = make_pipeline([
+    pipeline = make_pipeline(
         drop_trash,
         data_clean,
         encode,
         new_features,
         normalizer,
         SMOTE(random_state=params['random_state']),
-        CatBoostClassifier(
-            iterations=regressor_params['iterations'],						# Maximum number of boosting iterations
-            learning_rate=regressor_params['learning_rate'],					# Learning rate
-            eval_metric=regressor_params['eval_metric'],					    # Metric to monitor
-            custom_loss=regressor_params['custom_loss'],                      # Additional metrics to plot
-            early_stopping_rounds=regressor_params['early_stopping_rounds'],	# Stop if no improvement after X iterations
-            od_type=regressor_params['od_type'],						        # Overfitting detection type (detect after fixed number of non-improving iterations)
-            random_seed=regressor_params['random_seed'],
-            verbose=regressor_params['verbose'],						        # Print log every X iterations
-            eval_fraction=regressor_params['eval_fraction']                   # Fraction of training dataset for validation
-        )
-    ])
+        # CatBoostClassifier(
+        #     iterations=regressor_params['iterations'],						# Maximum number of boosting iterations
+        #     learning_rate=regressor_params['learning_rate'],					# Learning rate
+        #     eval_metric=regressor_params['eval_metric'],					    # Metric to monitor
+        #     custom_loss=regressor_params['custom_loss'],                      # Additional metrics to plot
+        #     early_stopping_rounds=regressor_params['early_stopping_rounds'],	# Stop if no improvement after X iterations
+        #     od_type=regressor_params['od_type'],						        # Overfitting detection type (detect after fixed number of non-improving iterations)
+        #     random_seed=regressor_params['random_seed'],
+        #     verbose=regressor_params['verbose'],						        # Print log every X iterations
+        #     eval_fraction=regressor_params['eval_fraction']                   # Fraction of training dataset for validation
+        # )
+        RandomForestClassifier(regressor_params)
+    )
     return pipeline
