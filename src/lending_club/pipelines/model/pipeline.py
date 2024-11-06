@@ -11,7 +11,7 @@ from lending_club.pipelines.analysis.nodes import features_eng
 
 # Full pipeline for model fitting
 def create_pipeline(**kwargs) -> Pipeline:
-    return pipeline([
+    pipe_instance = pipeline([
         node(
             func=processing_lc,
             inputs='original_lc_dataset',
@@ -55,4 +55,20 @@ def create_pipeline(**kwargs) -> Pipeline:
             name='evaluate_metrics_node'
         ),
     ],
-    tags='Model') # type: ignore
+    tags='Model'
+    ) # type: ignore
+    
+    pipeline_rfc = pipeline(
+        pipe=pipe_instance,
+        inputs='original_lc_dataset',
+        namespace='baseline_model'
+    ) # type: ignore
+
+    pipeline_ctb = pipeline(
+        pipe=pipe_instance,
+        inputs='original_lc_dataset',
+        namespace='candidate_model'
+    ) # type: ignore
+
+    return pipeline_rfc + pipeline_ctb
+    

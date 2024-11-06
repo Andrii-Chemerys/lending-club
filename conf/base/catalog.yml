@@ -54,9 +54,17 @@ primary_analysis:
     kedro-viz:
       layer: feature
 
-regressor:
+baseline_model.regressor:
   type: pickle.PickleDataset
-  filepath: data/6_models/lending-club/Loan_status.pkl
+  filepath: data/6_models/lending-club/baseline_model.pkl
+  versioned: true
+  metadata:
+    kedro-viz:
+      layer: models
+
+candidate_model.regressor:
+  type: pickle.PickleDataset
+  filepath: data/6_models/lending-club/candidate_model.pkl
   versioned: true
   metadata:
     kedro-viz:

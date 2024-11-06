@@ -16,6 +16,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import pandas as pd
 import logging
 from ..encode.nodes import _default_status
+from imblearn.pipeline import make_pipeline as imb_make_pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -42,21 +43,31 @@ def train_model(X_train, y_train, regressor, params: dict):
     return regressor
 
 
-def evaluate_metrics(model: object, params: dict, X_true: object, y_true: object) -> pd.DataFrame:
-    y_pred = model.predict(X_true)
-    # NN model return probabilities that we should translate to
-    # True/False based on treshold = 0.5
-    if not isinstance(y_pred, list):
-        y_pred = (y_pred > 0.5)
-    metrics = pd.DataFrame()
-    metrics['accuracy']  = {params['name']: accuracy_score(y_true, y_pred)}
-    metrics['precision'] = {params['name']: precision_score(y_true, y_pred)}
-    metrics['recall']    = {params['name']: recall_score(y_true, y_pred)}
-    metrics['f1']        = {params['name']: f1_score(y_true, y_pred)}
-    metrics['roc_auc']   = {params['name']: roc_auc_score(y_true, y_pred)}
-    metrics['conf_mtx']  = {params['name']: confusion_matrix(y_true, y_pred)}
-    print("Model's scores:\n", metrics)
-
+def evaluate_metrics(model: object, params: dict, 
+                     X_true: object, y_true: object,
+                     start, stop, step) -> pd.DataFrame:
+    y_pred = model.predict_proba(X_true)
+    metrics = pd.DataFrame(
+    for thresh in range(start, stop, step):
+        y_pred = (y_pred[:,1] > thresh)
+        name = f"{params['model_options']['name']} _tr: {params['prob_tresh']}"
+        tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+            data={
+                'prob_tresh': params['prob_tresh'],
+                'accuracy'  : accuracy_score(y_true, y_pred),
+                'precision' : precision_score(y_true, y_pred),
+                'recall'    : recall_score(y_true, y_pred),
+                'f1'        : f1_score(y_true, y_pred),
+                'roc_auc'   : roc_auc_score(y_true, y_pred),
+                'tn'        : tn,
+                'fp'        : fp,
+                'fn'        : fn,
+                'tp'        : tp,
+                'loss'      : params['FP_cost'] * fp + params['FN_cost'] *fn,
+            },
+            index = [name]
+        )
+    return metrics
 
 def _drop_duplicates(df: pd.DataFrame):
     return df.drop_duplicates()
@@ -65,7 +76,7 @@ def _drop_duplicates(df: pd.DataFrame):
 def model_pipeline(params: dict):
 
     # split important features to assign preprocessing steps
-    category_feat = [f for f in (params['category'] + params['emp_len']) if f in params['model_features']]
+    category_feat = [f for f in (params['category'] + [params['emp_len']]) if f in params['model_features']]
     numeric_feat_zero = [f for f in params['fill_zero'] if f in params['model_features']]
     numeric_feat_med = [f for f in params['fill_med'] if f in params['model_features']]
 
@@ -88,9 +99,9 @@ def model_pipeline(params: dict):
 
     regressor_params = params['model_options']['regressor_options']
 
-    pipeline = make_pipeline(
+    pipeline = imb_make_pipeline(
         preprocessing,
-        # SMOTE(random_state=params['random_state']),
+        SMOTE(random_state=params['random_state']),
         # CatBoostClassifier(
         #     iterations=regressor_params['iterations'],						# Maximum number of boosting iterations
         #     learning_rate=regressor_params['learning_rate'],					# Learning rate
@@ -102,6 +113,6 @@ def model_pipeline(params: dict):
         #     verbose=regressor_params['verbose'],						        # Print log every X iterations
         #     eval_fraction=regressor_params['eval_fraction']                   # Fraction of training dataset for validation
         # )
-        RandomForestClassifier(regressor_params)
+        RandomForestClassifier(**regressor_params)
     )
     return pipeline
