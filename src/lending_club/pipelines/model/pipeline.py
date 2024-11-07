@@ -38,7 +38,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         ),
         node(
             func=model_pipeline,
-            inputs='parameters',
+            inputs=['params:model_options' ,'parameters'],
             outputs='model_pipe',
             name='model_pipeline_node'
         ),

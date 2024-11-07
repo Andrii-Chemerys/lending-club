@@ -18,9 +18,9 @@ import logging
 from ..encode.nodes import _default_status
 from imblearn.pipeline import make_pipeline as imb_make_pipeline
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
-def split_n_balance(df: pd.DataFrame, df_fe: pd.DataFrame, params: dict):
+def split_dataset(df: pd.DataFrame, df_fe: pd.DataFrame, params: dict):
     y = _default_status(df, params)
     X = pd.concat([df, df_fe], axis=1)
     X_train, X_test, y_train, y_test = train_test_split(
@@ -28,10 +28,6 @@ def split_n_balance(df: pd.DataFrame, df_fe: pd.DataFrame, params: dict):
         test_size=params['test_size'],
         random_state=params['random_state']
     )
-    logger.info("Train imbalanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
-    smote = SMOTE()
-    X_train, y_train = smote.fit_resample(X_train, y_train) # type: ignore
-    logger.info("Train balanced datasets size (X, y): %d, %d", X_train.shape[0], y_train.shape[0])
     return X_train, X_test, y_train, y_test
 
 
@@ -43,37 +39,42 @@ def train_model(X_train, y_train, regressor, params: dict):
     return regressor
 
 
-def evaluate_metrics(model: object, params: dict, 
-                     X_true: object, y_true: object,
-                     start, stop, step) -> pd.DataFrame:
-    y_pred = model.predict_proba(X_true)
-    metrics = pd.DataFrame(
-    for thresh in range(start, stop, step):
-        y_pred = (y_pred[:,1] > thresh)
-        name = f"{params['model_options']['name']} _tr: {params['prob_tresh']}"
+def make_rng(start, stop, step):
+    return range(start, stop, step)
+
+
+def evaluate_metrics(model: object, X_true, y_true,
+                     params: dict) -> pd.DataFrame:
+    y_pred_proba = model.predict_proba(X_true)
+    metrics = pd.DataFrame()
+    for thresh in make_rng(**params['model_options']['prob_threshold']):
+        y_pred = (y_pred_proba[:,1] > (thresh / 100))
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-            data={
-                'prob_tresh': params['prob_tresh'],
-                'accuracy'  : accuracy_score(y_true, y_pred),
-                'precision' : precision_score(y_true, y_pred),
-                'recall'    : recall_score(y_true, y_pred),
-                'f1'        : f1_score(y_true, y_pred),
-                'roc_auc'   : roc_auc_score(y_true, y_pred),
-                'tn'        : tn,
-                'fp'        : fp,
-                'fn'        : fn,
-                'tp'        : tp,
-                'loss'      : params['FP_cost'] * fp + params['FN_cost'] *fn,
-            },
-            index = [name]
+        cur_metrics = pd.DataFrame(
+        data={
+            'prob_tresh_%': thresh,
+            'accuracy'    : accuracy_score(y_true, y_pred),
+            'precision'   : precision_score(y_true, y_pred),
+            'recall'      : recall_score(y_true, y_pred),
+            'f1'          : f1_score(y_true, y_pred),
+            'roc_auc'     : roc_auc_score(y_true, y_pred),
+            'tn'          : tn,
+            'fp'          : fp,
+            'fn'          : fn,
+            'tp'          : tp,
+            'loss'        : params['FP_cost'] * fp + params['FN_cost'] *fn,
+        },
+        index = [params['model_options']['name']]
         )
+        metrics = pd.concat([metrics, cur_metrics], axis=0)
     return metrics
+
 
 def _drop_duplicates(df: pd.DataFrame):
     return df.drop_duplicates()
 
 
-def model_pipeline(params: dict):
+def model_pipeline(model_options: dict, params: dict):
 
     # split important features to assign preprocessing steps
     category_feat = [f for f in (params['category'] + [params['emp_len']]) if f in params['model_features']]
@@ -97,22 +98,12 @@ def model_pipeline(params: dict):
         (numeric_feat_med_transformer, numeric_feat_med)
     )
 
-    regressor_params = params['model_options']['regressor_options']
+    regressor_params = model_options['regressor_options']
 
     pipeline = imb_make_pipeline(
         preprocessing,
         SMOTE(random_state=params['random_state']),
-        # CatBoostClassifier(
-        #     iterations=regressor_params['iterations'],						# Maximum number of boosting iterations
-        #     learning_rate=regressor_params['learning_rate'],					# Learning rate
-        #     eval_metric=regressor_params['eval_metric'],					    # Metric to monitor
-        #     custom_loss=regressor_params['custom_loss'],                      # Additional metrics to plot
-        #     early_stopping_rounds=regressor_params['early_stopping_rounds'],	# Stop if no improvement after X iterations
-        #     od_type=regressor_params['od_type'],						        # Overfitting detection type (detect after fixed number of non-improving iterations)
-        #     random_seed=regressor_params['random_seed'],
-        #     verbose=regressor_params['verbose'],						        # Print log every X iterations
-        #     eval_fraction=regressor_params['eval_fraction']                   # Fraction of training dataset for validation
-        # )
+        # CatBoostClassifier(**regressor_params)
         RandomForestClassifier(**regressor_params)
     )
     return pipeline
