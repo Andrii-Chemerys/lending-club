@@ -19,7 +19,7 @@ baseline_model:
       random_state: 42
       criterion: log_loss
     # probability thresholds for model evaluation in  %
-    prob_threshold:                   
+    prob_threshold:
       start: 30
       stop: 70
       step: 1
@@ -41,8 +41,9 @@ candidate_model:
       verbose: 100                  # Print log every X iterations
       eval_fraction: 0.2
       use_best_model: True
+      loss_function: Logloss
     fit_options:
-    prob_threshold:                   
-      start: 10
-      stop: 100
-      step: 5   
+    prob_threshold:
+      start: 30
+      stop: 70
+      step: 1
