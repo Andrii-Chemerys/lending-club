@@ -31,7 +31,7 @@ candidate_model:
     regressor_options:
       iterations: 1000               # Maximum number of boosting iterations
       learning_rate: 0.05           # Learning rate
-      eval_metric: ROCAUC        # Metric to monitor
+      eval_metric: PRAUC        # Metric to monitor
       custom_loss :                 # Additional metrics to plot
         - AUC
         - Accuracy

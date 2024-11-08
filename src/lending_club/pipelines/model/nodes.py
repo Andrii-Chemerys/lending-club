@@ -18,10 +18,14 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imb_make_pipeline
 from ..encode.nodes import _default_status
+from lending_club.pipelines.analysis.nodes import features_eng
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 
 def split_dataset(df: pd.DataFrame, params: dict):
+    features_eng(df, params)
     y = _default_status(df, params)
     X = df
     X_train, X_test, y_train, y_test = train_test_split(
@@ -45,31 +49,32 @@ def make_rng(start, stop, step):
 
 
 def evaluate_metrics(model: object, X_true, y_true,
-                     params: dict) -> pd.DataFrame:
+                     parameters: dict, params: dict) -> dict:
     y_pred_proba = model.predict_proba(X_true)
     metrics = pd.DataFrame()
-    for thresh in make_rng(**params['model_options']['prob_threshold']):
+    for thresh in make_rng(**params['prob_threshold']):
         y_pred = (y_pred_proba[:,1] > (thresh / 100))
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
         cur_metrics = pd.DataFrame(
         data={
-            'prob_tresh_%': thresh,
-            'accuracy'    : accuracy_score(y_true, y_pred),
-            'precision'   : precision_score(y_true, y_pred),
-            'recall'      : recall_score(y_true, y_pred),
-            'f1'          : f1_score(y_true, y_pred),
-            'roc_auc'     : roc_auc_score(y_true, y_pred),
-            'tn'          : tn,
-            'fp'          : fp,
-            'fn'          : fn,
-            'tp'          : tp,
-            'loss'        : params['FP_cost'] * fp + params['FN_cost'] *fn,
+            'prob_thresh_%': thresh,
+            'accuracy'     : accuracy_score(y_true, y_pred),
+            'precision'    : precision_score(y_true, y_pred),
+            'recall'       : recall_score(y_true, y_pred),
+            'f1'           : f1_score(y_true, y_pred),
+            'roc_auc'      : roc_auc_score(y_true, y_pred),
+            'cm_tn'        : tn,
+            'cm_fp'        : fp,
+            'cm_fn'        : fn,
+            'cm_tp'        : tp,
+            'loss'         : parameters['FP_cost'] * fp + parameters['FN_cost'] *fn,
         },
-        index = [params['model_options']['name']]
+        index = [params['name']]
         )
         metrics = pd.concat([metrics, cur_metrics], axis=0)
-    logger.info(f"The best probability threshold for {params['model_options']['name']} model based on min loss: {metrics[metrics.loss==metrics.loss.min()]['prob_thresh_%'].iloc[0]}")
-    return metrics
+    best_metrics = metrics[metrics.loss==metrics.loss.min()]   
+    logger.info(f"The best probability threshold for {params['name']} model based on min loss: {best_metrics['prob_thresh_%'].iloc[0]}")
+    return best_metrics.to_dict(orient='index')[params['name']]
 
 
 def _drop_duplicates(df: pd.DataFrame):
@@ -127,3 +132,14 @@ def model_pipeline(model_options: dict, params: dict):
         regressor
     )
     return model
+
+
+def create_confusion_matrix(X_true, y_true, model, metrics):
+    predicted = model.predict_proba(X_true)[:,1] > (metrics["prob_thresh_%"] / 100)
+    data = {"y_Actual": y_true, "y_Predicted": predicted}
+    df = pd.DataFrame(data, columns=["y_Actual", "y_Predicted"])
+    confusion_matrix = pd.crosstab(
+        df["y_Actual"], df["y_Predicted"], rownames=["Actual"], colnames=["Predicted"]
+    )
+    sns.heatmap(confusion_matrix, annot=True)
+    return plt

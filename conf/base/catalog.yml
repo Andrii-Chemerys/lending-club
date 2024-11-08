@@ -50,9 +50,7 @@ primary_analysis:
 "{name}#yml":
   type: yaml.YAMLDataset
   filepath: conf/base/parameters_{name}.yml
-  metadata:
-    kedro-viz:
-      layer: feature
+
 
 # "{namespace}.{model_inputs}#mi":
 #   type: pandas.CSVDataset
@@ -70,9 +68,10 @@ primary_analysis:
       layer: models
 
 "{namespace}.metrics":
-  type: pandas.CSVDataset
-  filepath: data/7_model_output/lending-club/{namespace}_scores.csv
+  type: tracking.MetricsDataset
+  filepath: data/9_tracking/lending-club/{namespace}_metrics.json
+
+"{namespace}.confusion_matrix":
+  type: matplotlib.MatplotlibWriter
+  filepath: data/9_tracking/lending-club/{namespace}_confusion_matrix.png
   versioned: true
-  metadata:
-    kedro-viz:
-      layer: outputs

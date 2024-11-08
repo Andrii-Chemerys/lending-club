@@ -4,7 +4,7 @@ generated using Kedro 0.19.9
 """
 
 from kedro.pipeline import Pipeline, pipeline, node
-from .nodes import split_dataset, model_pipeline, train_model, evaluate_metrics, _drop_duplicates
+from .nodes import split_dataset, model_pipeline, train_model, evaluate_metrics, _drop_duplicates, create_confusion_matrix
 
 from lending_club.pipelines.data_processing.nodes import processing_lc
 from lending_club.pipelines.analysis.nodes import features_eng
@@ -51,10 +51,16 @@ def create_pipeline(**kwargs) -> Pipeline:
         ),
         node(
             func=evaluate_metrics,
-            inputs=['regressor', 'params:model_options', 'X_test', 'y_test'],
+            inputs=['regressor', 'X_test', 'y_test', 'parameters', 'params:model_options'],
             outputs='metrics',
             name='evaluate_metrics_node'
         ),
+        node(
+            func=create_confusion_matrix,
+            inputs=['X_test', 'y_test','regressor', 'metrics'],
+            outputs="confusion_matrix",
+            name="create_confusion_matrix_node" 
+        )
     ],
     tags='Model'
     ) # type: ignore
