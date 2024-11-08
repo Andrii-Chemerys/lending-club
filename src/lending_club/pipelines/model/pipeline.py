@@ -10,7 +10,7 @@ from lending_club.pipelines.data_processing.nodes import processing_lc
 from lending_club.pipelines.analysis.nodes import features_eng
 
 # Full pipeline for model fitting
-'''
+
 def create_pipeline(**kwargs) -> Pipeline:
     pipe_instance = pipeline([
         node(
@@ -33,7 +33,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
         node(
             func=split_dataset,
-            inputs=['intermediate_lc_unique', 'lc_new_features', 'parameters'],
+            inputs=['intermediate_lc_unique', 'parameters'],
             outputs=['X_train', 'X_test', 'y_train', 'y_test'],
             name='model_split_dataset_node',
         ),
@@ -52,7 +52,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=evaluate_metrics,
             inputs=['regressor', 'params:model_options', 'X_test', 'y_test'],
-            outputs=None,
+            outputs='metrics',
             name='evaluate_metrics_node'
         ),
     ],
@@ -73,4 +73,3 @@ def create_pipeline(**kwargs) -> Pipeline:
 
     return pipeline_rfc + pipeline_ctb
 
-'''

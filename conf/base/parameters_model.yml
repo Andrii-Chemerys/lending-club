@@ -18,6 +18,7 @@ baseline_model:
       n_estimators: 100
       random_state: 42
       criterion: log_loss
+      class_weight: balanced
     # probability thresholds for model evaluation in  %
     prob_threshold:
       start: 30
@@ -28,9 +29,9 @@ candidate_model:
   model_options:
     name: catboost                  # catboostclassifier
     regressor_options:
-      iterations: 500               # Maximum number of boosting iterations
+      iterations: 1000               # Maximum number of boosting iterations
       learning_rate: 0.05           # Learning rate
-      eval_metric: Logloss        # Metric to monitor
+      eval_metric: ROCAUC        # Metric to monitor
       custom_loss :                 # Additional metrics to plot
         - AUC
         - Accuracy

@@ -54,17 +54,24 @@ primary_analysis:
     kedro-viz:
       layer: feature
 
+# "{namespace}.{model_inputs}#mi":
+#   type: pandas.CSVDataset
+#   filepath: data/5_model_input/lending-club/{model_inputs}.csv
+#   metadata:
+#     kedro-viz:
+#       layer: inputs
+
 "{namespace}.regressor":
   type: pickle.PickleDataset
-  filepath: data/6_models/lending-club/{namespace}.pkl
+  filepath: data/6_models/lending-club/{namespace}_model.pkl
   versioned: true
   metadata:
     kedro-viz:
       layer: models
 
 "{namespace}.metrics":
-  type: pandas.ParquetDataset
-  filepath: data/7_model_output/lending-club/{namespace}_scores.parquet
+  type: pandas.CSVDataset
+  filepath: data/7_model_output/lending-club/{namespace}_scores.csv
   versioned: true
   metadata:
     kedro-viz:
