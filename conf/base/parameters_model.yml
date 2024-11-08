@@ -43,6 +43,6 @@ candidate_model:
       use_best_model: True
     fit_options:
     prob_threshold:                   
-      start: 10
-      stop: 100
-      step: 5   
+      start: 30
+      stop: 60
+      step: 4   
