@@ -153,3 +153,8 @@ venv.bak/
 # Misc
 .viz/*
 session_store.db
+
+# catboost
+catboost_training.json
+*.tsv
+*.tfevents

@@ -19,7 +19,7 @@ baseline_model:
       random_state: 42
       criterion: log_loss
     # probability thresholds for model evaluation in  %
-    prob_threshold:                   
+    prob_threshold:
       start: 30
       stop: 70
       step: 1
@@ -30,7 +30,7 @@ candidate_model:
     regressor_options:
       iterations: 500               # Maximum number of boosting iterations
       learning_rate: 0.05           # Learning rate
-      eval_metric: Precision        # Metric to monitor
+      eval_metric: Logloss        # Metric to monitor
       custom_loss :                 # Additional metrics to plot
         - AUC
         - Accuracy
@@ -41,8 +41,9 @@ candidate_model:
       verbose: 100                  # Print log every X iterations
       eval_fraction: 0.2
       use_best_model: True
+      loss_function: Logloss
     fit_options:
-    prob_threshold:                   
+    prob_threshold:
       start: 30
-      stop: 60
-      step: 4   
+      stop: 70
+      step: 1
