@@ -52,12 +52,12 @@ primary_analysis:
   filepath: conf/base/parameters_{name}.yml
 
 
-# "{namespace}.{model_inputs}#mi":
-#   type: pandas.CSVDataset
-#   filepath: data/5_model_input/lending-club/{model_inputs}.csv
-#   metadata:
-#     kedro-viz:
-#       layer: inputs
+"{namespace}.{model_inputs}#mi":
+  type: pandas.CSVDataset
+  filepath: data/5_model_input/lending-club/{model_inputs}.csv
+  metadata:
+    kedro-viz:
+      layer: inputs
 
 "{namespace}.regressor":
   type: pickle.PickleDataset
@@ -74,4 +74,9 @@ primary_analysis:
 "{namespace}.confusion_matrix":
   type: matplotlib.MatplotlibWriter
   filepath: data/9_tracking/lending-club/{namespace}_confusion_matrix.png
+  versioned: true
+
+"{namespace}.metrics_rd":
+  type: json.JSONDataset
+  filepath: data/9_tracking/lending-club/{namespace}_metrics.json
   versioned: true

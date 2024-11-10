@@ -72,7 +72,7 @@ def evaluate_metrics(model: object, X_true, y_true,
         index = [params['name']]
         )
         metrics = pd.concat([metrics, cur_metrics], axis=0)
-    best_metrics = metrics[metrics.loss==metrics.loss.min()]   
+    best_metrics = metrics[metrics.loss==metrics.loss.min()]
     logger.info(f"The best probability threshold for {params['name']} model based on min loss: {best_metrics['prob_thresh_%'].iloc[0]}")
     return best_metrics.to_dict(orient='index')[params['name']]
 
@@ -92,7 +92,7 @@ def model_pipeline(model_options: dict, params: dict):
     remainder_feat = list(set(params['model_features']) - set(category_feat) - set(numeric_feat_zero) - set(numeric_feat_med))
 
     # transformer to replace missing numeric values by 0
-    # and standardize all values 
+    # and standardize all values
     numeric_feat_zero_transformer = make_pipeline(
         SimpleImputer(strategy='constant', fill_value=0),
         StandardScaler()
@@ -103,7 +103,7 @@ def model_pipeline(model_options: dict, params: dict):
         StandardScaler()
     )
 
-    # assemble transformers in preprocessing pipe so it will perform 
+    # assemble transformers in preprocessing pipe so it will perform
     # following transformations:
     #   - encode all categorical features to numbers
     #   - fill missing values in specific number features as "0" and standardize them
@@ -119,12 +119,12 @@ def model_pipeline(model_options: dict, params: dict):
     # choose regressor depending on provided model_options
     if model_options['name'] == 'rfc':
         regressor = RandomForestClassifier(**model_options['regressor_options'])
-    else: 
+    else:
         if model_options['name'] == 'catboost':
             regressor = CatBoostClassifier(**model_options['regressor_options'])
         else:
             raise Exception("Pipeline accepts only RandomForestClassifier and CatBoostClassifier")
-    
+
     # Assemble preprocessing pipeline, imbalance handling and chosen regressor as the model pipeline
     model = imb_make_pipeline(
         preprocessing,
@@ -141,5 +141,5 @@ def create_confusion_matrix(X_true, y_true, model, metrics):
     confusion_matrix = pd.crosstab(
         df["y_Actual"], df["y_Predicted"], rownames=["Actual"], colnames=["Predicted"]
     )
-    sns.heatmap(confusion_matrix, annot=True)
+    sns.heatmap(confusion_matrix, annot=True, fmt="d")
     return plt

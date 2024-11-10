@@ -1,45 +1,40 @@
-# lending_club
+# Lending Club
 
 [![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
 
 ## Overview
 
-This is your new Kedro project with Kedro-Viz setup, which was generated using `kedro 0.19.9`.
+Landing Club dataset provides information about loans issued to the individuals and related data from loan applications submitted on loan request date. This project aims to make a model, using machine learning techniques, that will predict whether the loan will be defaulted or not based on information provided in loan applications.
 
-Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
+For this project Kedro framework with Kedro-Viz setup was used. Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
 
-## How to install dependencies
+## Notebooks
 
-Declare any dependencies in `requirements.txt` for `pip` installation.
+See my workflow description and report in Jupyter notebooks in `notebooks` folder.
 
-To install them, run:
 
-```
-pip install -r requirements.txt
-```
+## Project dependencies
+
+Install the project requirements with `pip install -r requirements.txt`.
+
 
 ## How to run Kedro pipeline
 
-You can run Kedro project with:
+You should run Kedro project with:
 
 ```
 kedro run
 ```
 
+After completion of all pipelines' steps two models will be created and saved in `data\6_models` folder in a specific version subfolder: baseline and candidate.
 
-## Project dependencies
+## Visualization with Kedro
 
-To see and update the dependency requirements for project use `requirements.txt`. Install the project requirements with `pip install -r requirements.txt`.
+To see the pipelines or metrics of each model you can run Kedro-viz:
 
-[Further information about project dependencies](https://docs.kedro.org/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
+```
+kedro viz
+```
 
-
-### How to ignore notebook output cells in `git`
-To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
-
-> *Note:* Your output cells will be retained locally.
-
-[Further information about using notebooks for experiments within Kedro projects](https://docs.kedro.org/en/develop/notebooks_and_ipython/kedro_and_notebooks.html).
-## Package your Kedro project
-
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html).
+Click to Experiment tracking to see metrics and confusion matrices:
+![Experiment tracking](img/Tracking.jpg)
