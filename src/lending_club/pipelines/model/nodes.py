@@ -86,9 +86,9 @@ def model_pipeline(model_options: dict, params: dict):
     set_config(transform_output='pandas')
 
     # split important features to assign preprocessing steps
-    category_feat = [f for f in (params['category'] + [params['emp_len']]) if f in params['model_features']]
-    numeric_feat_zero = [f for f in params['fill_zero'] if f in params['model_features']]
-    numeric_feat_med = [f for f in params['fill_med'] if f in params['model_features']]
+    category_feat = [f for f in (params['category'] + params['emp_len']) if f in params['model_features']]
+    numeric_feat_zero = [f for f in (params['fill_zero'] + params['fill_zero_adj']) if f in params['model_features']]
+    numeric_feat_med = [f for f in (params['fill_med'] + params['fill_med_adj']) if f in params['model_features']]
     remainder_feat = list(set(params['model_features']) - set(category_feat) - set(numeric_feat_zero) - set(numeric_feat_med))
 
     # transformer to replace missing numeric values by 0
@@ -110,7 +110,7 @@ def model_pipeline(model_options: dict, params: dict):
     #   - fill missing values in specific number features as median and standardize them
     #   - standardize the rest of the features
     preprocessing = make_column_transformer(
-        (OrdinalEncoder(), category_feat),
+        (OrdinalEncoder(encoded_missing_value=-1), category_feat),
         (numeric_feat_zero_transformer, numeric_feat_zero),
         (numeric_feat_med_transformer, numeric_feat_med),
         (StandardScaler(), remainder_feat)
@@ -135,7 +135,7 @@ def model_pipeline(model_options: dict, params: dict):
 
 
 def create_confusion_matrix(X_true, y_true, model, metrics):
-    predicted = model.predict_proba(X_true)[:,1] > (metrics["prob_thresh_%"] / 100)
+    predicted = (model.predict_proba(X_true)[:,1] > (metrics["prob_thresh_%"] / 100))
     data = {"y_Actual": y_true, "y_Predicted": predicted}
     df = pd.DataFrame(data, columns=["y_Actual", "y_Predicted"])
     confusion_matrix = pd.crosstab(

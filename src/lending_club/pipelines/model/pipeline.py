@@ -34,7 +34,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=split_dataset,
             inputs=['intermediate_lc_unique', 'parameters'],
-            outputs=['X_train#mi', 'X_test#mi', 'y_train#mi', 'y_test#mi'],
+            outputs=['X_train', 'X_test', 'y_train', 'y_test'],
             name='model_split_dataset_node',
         ),
         node(
@@ -45,19 +45,19 @@ def create_pipeline(**kwargs) -> Pipeline:
         ),
         node(
             func=train_model,
-            inputs=['X_train#mi', 'y_train#mi', 'model_pipe', 'params:model_options'],
+            inputs=['X_train', 'y_train', 'model_pipe', 'params:model_options'],
             outputs='regressor',
             name='train_model_node'
         ),
         node(
             func=evaluate_metrics,
-            inputs=['regressor', 'X_test#mi', 'y_test#mi', 'parameters', 'params:model_options'],
+            inputs=['regressor', 'X_test', 'y_test', 'parameters', 'params:model_options'],
             outputs='metrics',
             name='evaluate_metrics_node'
         ),
         node(
             func=create_confusion_matrix,
-            inputs=['X_test#mi', 'y_test#mi','regressor', 'metrics_rd'],
+            inputs=['X_test', 'y_test','regressor', 'metrics_rd'],
             outputs="confusion_matrix",
             name="create_confusion_matrix_node"
         )

@@ -5,10 +5,6 @@ generated using Kedro 0.19.9
 import pandas as pd
 import numpy as np
 
-# def selected_features(df: pd.DataFrame, params: dict) -> pd.DataFrame:
-#TODO: Remove    
-#     return df[[params['target'], *params['features']]]
-
 # Function that will select features with strong correlation
 # to the target based on two thresholds feeded as parameters: 
 #   - correlation to target

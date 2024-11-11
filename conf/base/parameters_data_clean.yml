@@ -110,3 +110,11 @@ fill_med:
   - collections_12_mths_ex_med
   - tax_liens
   - total_rev_hi_lim
+
+# Same lists for new features
+fill_zero_adj:
+  - annual_inc_adj
+  - revol_bal_adj
+
+fill_med_adj:
+  - revol_util_adj

@@ -51,14 +51,6 @@ primary_analysis:
   type: yaml.YAMLDataset
   filepath: conf/base/parameters_{name}.yml
 
-
-"{namespace}.{model_inputs}#mi":
-  type: pandas.CSVDataset
-  filepath: data/5_model_input/lending-club/{model_inputs}.csv
-  metadata:
-    kedro-viz:
-      layer: inputs
-
 "{namespace}.regressor":
   type: pickle.PickleDataset
   filepath: data/6_models/lending-club/{namespace}_model.pkl
