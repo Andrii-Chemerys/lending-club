@@ -26,12 +26,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             name='model_drop_duplicates_node',
             ),
         node(
-            func=features_eng,
-            inputs=['intermediate_lc_unique', 'parameters'],
-            outputs='lc_new_features',
-            name='model_features_eng_node',
-            ),
-        node(
             func=split_dataset,
             inputs=['intermediate_lc_unique', 'parameters'],
             outputs=['X_train', 'X_test', 'y_train', 'y_test'],

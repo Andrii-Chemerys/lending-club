@@ -72,3 +72,4 @@ primary_analysis:
   type: json.JSONDataset
   filepath: data/9_tracking/lending-club/{namespace}_metrics.json
   versioned: true
+

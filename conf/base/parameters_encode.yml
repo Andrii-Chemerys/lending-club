@@ -5,8 +5,7 @@
 # Link: https://docs.kedro.org/en/0.19.9/configuration/parameters.html
 
 default: loan_status
-emp_len: 
-  - emp_length
+emp_len: emp_length
 category:
   - hardship_reason
   - home_ownership

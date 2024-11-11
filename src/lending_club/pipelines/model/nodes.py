@@ -86,7 +86,7 @@ def model_pipeline(model_options: dict, params: dict):
     set_config(transform_output='pandas')
 
     # split important features to assign preprocessing steps
-    category_feat = [f for f in (params['category'] + params['emp_len']) if f in params['model_features']]
+    category_feat = [f for f in (params['category'] + [params['emp_len']]) if f in params['model_features']]
     numeric_feat_zero = [f for f in (params['fill_zero'] + params['fill_zero_adj']) if f in params['model_features']]
     numeric_feat_med = [f for f in (params['fill_med'] + params['fill_med_adj']) if f in params['model_features']]
     remainder_feat = list(set(params['model_features']) - set(category_feat) - set(numeric_feat_zero) - set(numeric_feat_med))
